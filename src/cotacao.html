@@ -1,0 +1,110 @@
+<div class="flex justify-center flex-col">
+  <div class="w-full border-b-2 p-3 flex justify-center">
+    <h1 class="font-bold text-2xl">Cotação de Moeda</h1>
+  </div>
+  <div class="w-full flex flex-row p-3 justify-center space-x-2 border-b-2">
+    <div class="flex flex-col">
+      <label for="value">
+        Informe o Valor:
+      </label>
+      <input type="number" id="value" class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="R$"/>
+    </div>
+    <div class="items-center flex">
+      <button class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" id="calc">Calcular</button>
+    </div>
+  </div>
+  <div class="h-full w-full justify-center flex">
+    <table class="table mt-2">
+      <thead>
+      <tr>
+        <th colspan="4" class="border-2 p-2">Resultado</th>
+      </tr>
+      <tr>
+        <th class="border-2 p-2">Valor</th>
+        <th class="border-2 p-2">Cotação</th>
+        <th class="border-2 p-2">Data Cotação</th>
+        <th class="border-2 p-2">Resultado</th>
+      </tr>
+      </thead>
+      <tbody id="result"></tbody>
+    </table>
+  </div>
+</div>
+<script>
+  let moedas = [
+      {
+        "sigla": "USD",
+        "nome": "Dólar Americano",
+        "simbolo": "$"
+      },
+      {
+        "sigla": "EUR",
+        "nome": "Euro",
+        "simbolo": "€"
+      },
+      {
+        "sigla": "JPY",
+        "nome": "Iene Japonês",
+        "simbolo": "¥"
+      },
+      {
+        "sigla": "GBP",
+        "nome": "Libra Esterlina",
+        "simbolo": "£"
+      },
+      {
+        "sigla": "CAD",
+        "nome": "Dólar Canadense",
+        "simbolo": "CA$"
+      },
+      {
+        "sigla": "AUD",
+        "nome": "Dólar Australiano",
+        "simbolo": "A$"
+      }
+      // Adicione outras siglas de moedas conforme necessário
+    ]
+  let sel = '<option value="">Selecione</option>'
+  moedas.forEach((obj) => {
+    sel += `<option value="${obj.sigla}">${obj.nome}</option>`
+  })
+  $('#sigla').html(sel)
+  $('#calc').on('click', () => {
+    Cotacao()
+  })
+  function Cotacao () {
+    $('#result').html('')
+    let val
+    val = $('#value').val()
+    if(val){
+      let dadosNav
+      if(localStorage.getItem('consultas') !== null){
+        dadosNav = localStorage.getItem('consultas')
+      }else{
+        dadosNav = {
+          ids: 0,
+          consultas: []
+        }
+
+      }
+      $.ajax({
+        url: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.10813/dados?formato=json`,
+        method: 'GET',
+        success: (response) => {
+          let id
+          let res = response[response.length -1]
+          id = dadosNav.ids + 1
+          dadosNav.consultas.push({id: id, valor: val, cota: res.valor, data: res.data, result: (res.valor * val).toFixed(2)})
+          dadosNav.ids += 1
+          localStorage.setItem('consultas', JSON.toString(dadosNav))
+          console.log(localStorage.getItem('consoltas'))
+        }
+      })
+    }
+    else{
+      $('#result').html('<tr><th colspan="4" class="border-2 p-2 text-red-600">Por favor, Informar o valor Que Deseja e Moeda!</th></tr>')
+    }
+
+  }
+
+</script>

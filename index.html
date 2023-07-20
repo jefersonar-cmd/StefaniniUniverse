@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+</head>
+<body class="w-auto h-auto">
+<nav class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-200 to-blue-600">
+    <h1 class="font-bold">Programação Para Não Programadores</h1>
+    <!-- Div para conter a lista de itens e o botão de colapso -->
+    <div class="font-bold text-blue-200">
+        <ul class="flex xl:flex-row items-center space-x-2">
+            <li id="home" class="hover:underline cursor-pointer hover:text-black transition ease-in-out delay-150">Home</li>
+            <li id="sal" class="hover:underline cursor-pointer hover:text-black transition ease-in-out delay-150">Salário Líquido</li>
+            <li id="moeda" class="hover:underline cursor-pointer hover:text-black transition ease-in-out delay-150">Conversor de Moeda</li>
+            <li id="tabu" class="hover:underline cursor-pointer hover:text-black transition ease-in-out delay-150">Tabuada</li>
+            <li id="imc" class="hover:underline cursor-pointer hover:text-black transition ease-in-out delay-150">Cálculo IMC</li>
+            <li id="game" class="hover:underline cursor-pointer hover:text-black transition ease-in-out delay-150">Jogo de Adivinha</li>
+        </ul>
+    </div>
+</nav>
+
+<div id="conteudo" class="w-auto m-2 bg-gradient-to-r from-blue-600 to-blue-200 min-h-screen rounded-tl-lg rounded-br-lg"></div>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<div class="fixed bottom-0 right-0 p-5 font-bold hover:text-white transition delay-250">
+        <a href="https://github.com/jefersonar-cmd">Jefferson S.A © 2023</a>
+</div>
+    <script src="assets/script.js"></script>
+</body>
+</html>
