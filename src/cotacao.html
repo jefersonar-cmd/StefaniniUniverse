@@ -7,7 +7,7 @@
       <label for="value">
         Informe o Valor:
       </label>
-      <input type="number" id="value" class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="R$"/>
+      <input type="number" id="value" class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="$"/>
     </div>
     <div class="items-center flex">
       <button class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" id="calc">Calcular</button>
@@ -26,49 +26,11 @@
         <th class="border-2 p-2">Resultado</th>
       </tr>
       </thead>
-      <tbody id="result"></tbody>
+      <tbody id="conversor"></tbody>
     </table>
   </div>
 </div>
 <script>
-  let moedas = [
-      {
-        "sigla": "USD",
-        "nome": "Dólar Americano",
-        "simbolo": "$"
-      },
-      {
-        "sigla": "EUR",
-        "nome": "Euro",
-        "simbolo": "€"
-      },
-      {
-        "sigla": "JPY",
-        "nome": "Iene Japonês",
-        "simbolo": "¥"
-      },
-      {
-        "sigla": "GBP",
-        "nome": "Libra Esterlina",
-        "simbolo": "£"
-      },
-      {
-        "sigla": "CAD",
-        "nome": "Dólar Canadense",
-        "simbolo": "CA$"
-      },
-      {
-        "sigla": "AUD",
-        "nome": "Dólar Australiano",
-        "simbolo": "A$"
-      }
-      // Adicione outras siglas de moedas conforme necessário
-    ]
-  let sel = '<option value="">Selecione</option>'
-  moedas.forEach((obj) => {
-    sel += `<option value="${obj.sigla}">${obj.nome}</option>`
-  })
-  $('#sigla').html(sel)
   $('#calc').on('click', () => {
     Cotacao()
   })
@@ -77,27 +39,28 @@
     let val
     val = $('#value').val()
     if(val){
-      let dadosNav
+      var dadosNav = {
+        ids: 0,
+        consultas: []
+      }
       if(localStorage.getItem('consultas') !== null){
-        dadosNav = localStorage.getItem('consultas')
-      }else{
-        dadosNav = {
-          ids: 0,
-          consultas: []
-        }
-
+        dadosNav = JSON.parse(localStorage.getItem('consultas'))
       }
       $.ajax({
         url: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.10813/dados?formato=json`,
         method: 'GET',
         success: (response) => {
-          let id
+          let id, dado
           let res = response[response.length -1]
           id = dadosNav.ids + 1
-          dadosNav.consultas.push({id: id, valor: val, cota: res.valor, data: res.data, result: (res.valor * val).toFixed(2)})
+          dado = {ids: id, valor: val, cota: res.valor, data: res.data, result: (res.valor * val).toFixed(2)}
+          //console.log(dado)
+          dadosNav.consultas.push(dado)
           dadosNav.ids += 1
-          localStorage.setItem('consultas', JSON.toString(dadosNav))
-          console.log(localStorage.getItem('consoltas'))
+          localStorage.setItem('consultas', JSON.stringify(dadosNav))
+          //console.log(JSON.parse(localStorage.getItem('consultas')))
+          $('#value').val('')
+          carregarDados()
         }
       })
     }
@@ -106,5 +69,23 @@
     }
 
   }
-
+  function carregarDados () {
+    let dados = JSON.parse(localStorage.getItem('consultas'))
+    //console.log(dados.consultas)
+    let table = ''
+    if(dados !== null){
+      dados.consultas.forEach((obj) => {
+        table += `
+          <tr>
+            <th class="border-2 p-2">$${parseFloat(obj.valor).toFixed(2)}</th>
+            <th class="border-2 p-2">R$${parseFloat(obj.cota).toFixed(2)}</th>
+            <th class="border-2 p-2">${obj.data}</th>
+            <th class="border-2 p-2">R$${parseFloat(obj.result).toFixed(2)}</th>
+          </tr>
+        `
+      })
+      $('#conversor').html(table)
+    }
+  }
+  setInterval(carregarDados, 1000)
 </script>

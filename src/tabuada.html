@@ -26,7 +26,7 @@
                     <th class="border-2 p-2">Resultado</th>
                 </tr>
             </thead>
-            <tbody id="result"></tbody>
+            <tbody id="tabuada"></tbody>
         </table>
     </div>
 </div>
@@ -45,9 +45,9 @@
         let tr = ''
         for(let i = 1; i <= 10; i ++) {
             tr += `<tr><th class="border-2 p-2">${i}</th><th class="border-2 p-2">X</th><th class="border-2 p-2">${num}</th><th class="border-2 p-2">${(i * num)}</th></tr>`
-            console.log(i)
+            //console.log(i)
         }
-        console.log(tr)
-        $('#result').html(tr)
+        //console.log(tr)
+        $('#tabuada').html(tr)
     }
 </script>

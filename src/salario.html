@@ -1,0 +1,54 @@
+<div class="flex w-full flex-col items-center">
+    <div class="w-full flex justify-center font-bold text-3xl p-2 border-b-2">
+        Salário Líquido
+    </div>
+    <div class="p-2 flex items-center justify-center space-x-2 border-b-2">
+        <section>
+            <label for="func">Nome:</label>
+            <input id="func" class="shadow appearance-none border border-dark rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="Manual Gomes" />
+        </section>
+        <section>
+            <label for="salhr">Salário Hora:</label>
+            <input type="number" id="salhr" class="shadow appearance-none border border-dark rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="R$ 32,00">
+        </section>
+        <section>
+            <label for="reg">Regime Salarial:</label>
+            <select type="number" id="reg" class="shadow appearance-none border border-dark rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Selecione</option>
+                <option value="220">5x2</option>
+                <option value="180">12x36</option>
+            </select>
+        </section>
+        <section>
+            <label for="desc">Descontos Total:</label>
+            <input type="number" id="desc" class="shadow appearance-none border border-dark rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="R$ 850,00">
+        </section>
+        <section class="flex items-end h-full">
+            <button id="calc" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Calcular</button>
+        </section>
+    </div>
+    <div id="salres" class="h-[25rem] bg-white w-[50%] mt-4 rounded-2xl border-red-600 border-4 font-bold flex flex-col items-center justify-center p-4 text-2xl"></div>
+</div>
+<script>
+    $('#calc').on('click', () => {
+        calcSal()
+    })
+    function calcSal () {
+        let nome, salh, desc, reg, salLiquido
+        nome = $('#func').val()
+        salh = $('#salhr').val()
+        desc = $('#desc').val()
+        reg = $('#reg').val()
+        if(nome && salh && reg && desc){
+            salLiquido = (salh * reg) - desc
+            salLiquido = parseFloat(salLiquido.toFixed(2)).toLocaleString('pt-BR', {corrency: 'BRL', minimumFractionDigits: 2})
+            $('#salres').html(`
+                <img src="assets/user.png" alt="perfil" class="w-16 border-2 p-2 rounded-full"/>
+                <p>Nome: ${nome}</p>
+                <p>Salário líquido: R$${salLiquido}</p>
+            `)
+        }else{
+            $('#salres').html('<p class="text-red-600">Por favor, preencha todos os campos!</p>')
+        }
+    }
+</script>
