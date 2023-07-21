@@ -1,5 +1,5 @@
 $(window).on('load', () => {
-    $('#conteudo').load('./src/adivinha.html')
+    $('#conteudo').load('./src/index.html')
     $('#home').on('click', () => {
         $('#conteudo').load('./src/home.html')
     })
